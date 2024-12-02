@@ -24,6 +24,7 @@ def multiply(a: int, b: int) -> int:
 def divide(a: int, b: int) -> None | float:
     if b == 0:
         print("Division by zero is not allowed.")
+        raise ZeroDivisionError  # raise exception that can be caught by pytest or program code
         return
     result = a / b
     print(f"{a} / {b} = {result}")
