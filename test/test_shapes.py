@@ -9,6 +9,7 @@ Description: Test classes for objects from shapes.py demonstrating how to test c
 import pytest
 import source.shapes as shapes
 import math
+from test.test_fixtures import circle_collection  # Import the fixture
 
 
 # Define a test class for testing Circle class
@@ -67,3 +68,11 @@ class TestSquare:
 
     def test_perimeter(self):
         assert self.square.perimeter() == self.rectangle.perimeter()
+
+
+class TestCase1:
+    # Test function using the fixture imported from test_fixures.py
+    def test_circles(self, circle_collection) -> None:
+        for circle in circle_collection:
+            # By passing the fixture as argument, one has access to all the objects that were initialised
+            assert circle.area() == math.pi * circle.radius**2
