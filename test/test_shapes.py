@@ -76,3 +76,8 @@ class TestCase1:
         for circle in circle_collection:
             # By passing the fixture as argument, one has access to all the objects that were initialised
             assert circle.area() == math.pi * circle.radius**2
+
+    # Use fixture from conftest file without need of import statement
+    def test_rectangles(self, rectangle_collection):
+        for rectangle in rectangle_collection:
+            assert rectangle.area() == rectangle.width * rectangle.height

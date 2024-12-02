@@ -42,14 +42,6 @@ def circle_collection() -> list[shapes.Circle]:
     del unit_circle, small_circle, big_circle  # clean-up steps (teardown code)
 
 
-@pytest.fixture
-def rectangle_collection() -> list[shapes.Rectangle]:
-    unit_rectangle = shapes.Rectangle(1, 1)
-    small_rectangle = shapes.Rectangle(3, 4)
-    big_rectangle = shapes.Rectangle(10, 20)
-    return [unit_rectangle, small_rectangle, big_rectangle]
-
-
 # Test function using the fixture
 def test_circles(circle_collection) -> None:
     for circle in circle_collection:
