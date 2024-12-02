@@ -1,6 +1,10 @@
-# Functions that shall be tested using pytest
-# Date: 02.12.2024
-# Author: krystofh
+#!/usr/bin/env python3
+"""
+File: functions.py
+Author: krystofh
+Date: 2024-12-02
+Description: Arithmetic functions that shall be tested using pytest
+"""
 
 
 def add(a: int, b: int) -> int:
