@@ -6,8 +6,14 @@ Date: 2024-12-02
 Description: Conftest file stores global fixtures, this is an example
 """
 
+from typing import Literal
 import pytest
 import source.shapes as shapes
+
+
+@pytest.fixture
+def is_debug() -> Literal[True]:
+    return True
 
 
 @pytest.fixture

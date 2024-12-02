@@ -70,6 +70,7 @@ class TestSquare:
         assert self.square.perimeter() == self.rectangle.perimeter()
 
 
+@pytest.mark.skip(reason="Showcase of skip mark, delete if needed")
 class TestCase1:
     # Test function using the fixture imported from test_fixures.py
     def test_circles(self, circle_collection) -> None:
