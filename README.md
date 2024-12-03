@@ -331,11 +331,6 @@ def test_todo_mocked_typeerror(mock_get):
 2. **Error Handling**:
    - Use `pytest.raises` to assert that a specific exception is raised.
 
----
-
-## **4. Mocking Lifecycle**
-
-
 
 ## Links
 
