@@ -10,6 +10,7 @@ import pytest
 import source.shapes as shapes
 import math
 from test.test_fixtures import circle_collection  # Import the fixture
+import time
 
 
 # Define a test class for testing Circle class
@@ -69,16 +70,28 @@ class TestSquare:
     def test_perimeter(self):
         assert self.square.perimeter() == self.rectangle.perimeter()
 
+    @pytest.mark.xfail(
+        reason="Using fake perimeter calculation to demonstrate expected fail mark"
+    )
+    def test_perimeter2(self):
+        assert self.square.perimeter() == 2 * self.rectangle.perimeter()
 
-@pytest.mark.skip(reason="Showcase of skip mark, delete if needed")
+
 class TestCase1:
+    @pytest.mark.skip(reason="Showcase of skip mark, delete if needed")
     # Test function using the fixture imported from test_fixures.py
     def test_circles(self, circle_collection) -> None:
         for circle in circle_collection:
             # By passing the fixture as argument, one has access to all the objects that were initialised
             assert circle.area() == math.pi * circle.radius**2
 
+    @pytest.mark.smoke  # add custom mark
     # Use fixture from conftest file without need of import statement
     def test_rectangles(self, rectangle_collection):
         for rectangle in rectangle_collection:
             assert rectangle.area() == rectangle.width * rectangle.height
+
+    @pytest.mark.slow  # slow test
+    def test_slow(self):
+        time.sleep(5)
+        assert 1 == 1  # dummy assert

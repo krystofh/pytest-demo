@@ -25,6 +25,14 @@ def test_subtract():
     assert functions.subtract(32, -2) == 34
 
 
+# Testing multiple conditions by using parametrisation
+@pytest.mark.parametrize(
+    "minuend, subtrahend, difference", [(32, 4, 28), (32, -2, 34), (1, 2, -1)]
+)
+def test_subtract_parametrized(minuend, subtrahend, difference):
+    assert minuend - subtrahend == difference
+
+
 def test_multiply():
     assert functions.multiply(4, 8) == 32
     assert functions.multiply(2.5, 2.5) == 6.25
