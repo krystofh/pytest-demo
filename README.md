@@ -1,6 +1,8 @@
-# Testing code using pytest
+# Automated testing using pytest
 
-Demo of `pytest` framework
+Demo of `pytest` framework and Github actions for testing Python code
+
+![](https://github.com/krystofh/pytest-demo/actions/workflows/tests.yml/badge.svg)
 
 
 ## Deployment
@@ -332,8 +334,57 @@ def test_todo_mocked_typeerror(mock_get):
    - Use `pytest.raises` to assert that a specific exception is raised.
 
 
+## GitHub actions
+
+Enables defining automated CI/CD pipelines and executing the tests on a server in a Docker container. Logs and results automatically appear in the [repository's actions tab](https://github.com/krystofh/pytest-demo/actions):
+
+![Github actions tab](doc/actions.png)
+
+To define a workflow:
+
+1. Create `.github/workflows` folder in the root directory
+2. Create empty `tests.yml` file
+3. Give the workflow a name and define on which action to execute:
+   ```yaml
+    name: Automated tests
+    on:
+    - push
+    - pull_request
+   ```
+4. Define a job constisting of `setup-python` action for a specified version, like `3.13` here. Then install dependencies in the next step and finally execute the tests with a defined pass condition:
+
+```yaml
+jobs:
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run Pytest
+        run: |
+          source .venv/bin/activate
+          pytest --maxfail=5 --disable-warnings
+```
+
+> [!NOTE]
+> If you want to include a badge stating the pipeline status, include an svg image from the link with the template `REPOSITORY-URL/actions/workflows/tests.yml/badge.svg` like:
+
+```
+![Testing status](https://github.com/krystofh/pytest-demo/actions/workflows/tests.yml/badge.svg)
+```
+
 ## Links
 
 - [Freecodecamp.org pytest tutorial](https://www.youtube.com/watch?v=cHYq1MRoyI0)
+- [Tutorial on Github actions](https://www.youtube.com/watch?v=DhUpxWjOhME)
 - [pytest documentation](https://docs.pytest.org/en/6.2.x/contents.html)
-
+- [Github actions documentation](https://docs.github.com/en/actions)
