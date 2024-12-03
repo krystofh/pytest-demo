@@ -23,10 +23,12 @@ jobs:
           source .venv/bin/activate
           coverage run -m pytest --maxfail=5 --disable-warnings
           coverage report -m
+          coverage xml
+          ls -la # check the file
       - name: Upload Coverage Report
         if: success()
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
-          path: .coverage
+          path: coverage.xml
     
