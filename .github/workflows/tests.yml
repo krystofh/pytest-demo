@@ -24,7 +24,7 @@ jobs:
           coverage run -m pytest --maxfail=5 --disable-warnings
           coverage report -m
           coverage xml
-          ls -la # check the file
+          mv .coverage coverage # rename the file
       - name: Upload Coverage Report
         if: success()
         uses: actions/upload-artifact@v4
@@ -32,4 +32,4 @@ jobs:
           name: coverage-reports
           path: |
             coverage.xml
-            .coverage
+            coverage
