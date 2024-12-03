@@ -382,6 +382,45 @@ jobs:
 ![Testing status](https://github.com/krystofh/pytest-demo/actions/workflows/tests.yml/badge.svg)
 ```
 
+## Test coverage
+
+Knowing which parts of code are covered by tests and which are left behind can be valuable. To run such analysis, it is recommended to use `coverage.py` instead of `pytest-cov`. 
+
+The command can be run like below or with some additional pytest arguments.
+
+```bash
+coverage run -m pytest
+```
+
+After the tests finish, a report can be generated with:
+
+```bash
+coverage report -m
+```
+
+Or a nicer HTML version: `coverage html`
+
+This gives an overview of the missing lines and percentage of statements covered:
+
+```bash
+Name                     Stmts   Miss  Cover   Missing
+------------------------------------------------------
+source/__init__.py           0      0   100%
+source/functions.py         19      0   100%
+source/service.py            8      1    88%   19
+source/shapes.py            32      3    91%   19, 22, 25
+test/__init__.py             0      0   100%
+test/conftest.py             9      0   100%
+test/test_fixtures.py       15      0   100%
+test/test_functions.py      26      0   100%
+test/test_mocking.py        32      0   100%
+test/test_shapes.py         50      2    96%   84-86
+------------------------------------------------------
+TOTAL                      191      6    97%
+```
+
+Delete the reports with `coverage erase` if needed
+
 ## Links
 
 - [Freecodecamp.org pytest tutorial](https://www.youtube.com/watch?v=cHYq1MRoyI0)
