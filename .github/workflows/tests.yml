@@ -19,17 +19,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m venv .venv
-          source .venv/bin/activate
+          ${{ runner.os == 'Windows' && '.venv\\Scripts\\activate.bat' || 'source .venv/bin/activate' }}
           pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run Pytest
         run: |
-          ${{ runner.os == 'Windows' && '.venv\\Scripts\\activate' || 'source .venv/bin/activate' }}
+          ${{ runner.os == 'Windows' && '.venv\\Scripts\\activate.bat' || 'source .venv/bin/activate' }}
           coverage run -m pytest --maxfail=5 --disable-warnings
           coverage report -m --fail-under=80
           coverage html # optional report generation
           coverage xml
-        shell: ${{ runner.os == 'Windows' && 'cmd' || 'bash' }}
       - name: Upload Coverage Report
         if: success()
         uses: actions/upload-artifact@v4
