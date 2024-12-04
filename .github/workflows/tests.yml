@@ -29,6 +29,7 @@ jobs:
           coverage report -m --fail-under=80
           coverage html # optional report generation
           coverage xml
+        shell: ${{ runner.os == 'Windows' && 'cmd' || 'bash' }}
       - name: Upload Coverage Report
         if: success()
         uses: actions/upload-artifact@v4
