@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run Pytest
         run: |
-          source .venv/bin/activate
+          ${{ runner.os == 'Windows' && '.venv\\Scripts\\activate' || 'source .venv/bin/activate' }}
           coverage run -m pytest --maxfail=5 --disable-warnings
           coverage report -m --fail-under=80
           coverage html # optional report generation
