@@ -440,13 +440,21 @@ The generated report can be uploaded to the server as an `artefact`. Just add fo
 
 ### Setting pass criterion for coverage
 
-If a certain minimal coverage shall be ensured, adjust the report generation like this (example with `80%`):
+If a certain minimal coverage shall be ensured, adjust the report generation like this (example with `98%`):
 
 ```shell
-coverage report -m --fail-under=80
+coverage report -m --fail-under=98
 ```
 
-This can also fail the CI pipeline due tu its exit code.
+This can also fail the CI pipeline due tu its exit code:
+
+```shell
+ test/test_shapes.py         50      2    96%   84-86
+------------------------------------------------------
+TOTAL                      191      6    97%
+Coverage failure: total of 97 is less than fail-under=98
+Error: Process completed with exit code 2.
+```
 
 ## Links
 
