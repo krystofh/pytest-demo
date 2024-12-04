@@ -22,8 +22,8 @@ jobs:
         run: |
           source .venv/bin/activate
           coverage run -m pytest --maxfail=5 --disable-warnings
-          coverage report -m
-          coverage html
+          coverage report -m --fail-under=98
+          coverage html # optional report generation
           coverage xml
       - name: Upload Coverage Report
         if: success()

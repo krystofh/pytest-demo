@@ -392,13 +392,13 @@ The command can be run like below or with some additional pytest arguments.
 coverage run -m pytest
 ```
 
+### Generating a coverage report
+
 After the tests finish, a report can be generated with:
 
 ```bash
 coverage report -m
 ```
-
-Or a nicer HTML version: `coverage html`
 
 This gives an overview of the missing lines and percentage of statements covered:
 
@@ -419,7 +419,34 @@ test/test_shapes.py         50      2    96%   84-86
 TOTAL                      191      6    97%
 ```
 
+Another way instead of pure console output is to use XML: `coverage xml` or an even nicer HTML version: `coverage html`
+
 Delete the reports with `coverage erase` if needed
+
+### Uploading the coverage report
+
+The generated report can be uploaded to the server as an `artefact`. Just add following lines as a next step in the `test` job.
+
+```yaml
+      - name: Upload Coverage Report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            htmlcov
+            coverage.xml
+```
+
+### Setting pass criterion for coverage
+
+If a certain minimal coverage shall be ensured, adjust the report generation like this (example with `80%`):
+
+```shell
+coverage report -m --fail-under=80
+```
+
+This can also fail the CI pipeline due tu its exit code.
 
 ## Links
 
