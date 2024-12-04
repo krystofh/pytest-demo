@@ -333,6 +333,64 @@ def test_todo_mocked_typeerror(mock_get):
 2. **Error Handling**:
    - Use `pytest.raises` to assert that a specific exception is raised.
 
+## Test coverage
+
+Knowing which parts of code are covered by tests and which are left behind can be valuable. To run such analysis, it is recommended to use `coverage.py` instead of `pytest-cov`. 
+
+The command can be run like below or with some additional pytest arguments.
+
+```bash
+coverage run -m pytest
+```
+
+### Generating a coverage report
+
+After the tests finish, a report can be generated with:
+
+```bash
+coverage report -m
+```
+
+This gives an overview of the missing lines and percentage of statements covered:
+
+```bash
+Name                     Stmts   Miss  Cover   Missing
+------------------------------------------------------
+source/__init__.py           0      0   100%
+source/functions.py         19      0   100%
+source/service.py            8      1    88%   19
+source/shapes.py            32      3    91%   19, 22, 25
+test/__init__.py             0      0   100%
+test/conftest.py             9      0   100%
+test/test_fixtures.py       15      0   100%
+test/test_functions.py      26      0   100%
+test/test_mocking.py        32      0   100%
+test/test_shapes.py         50      2    96%   84-86
+------------------------------------------------------
+TOTAL                      191      6    97%
+```
+
+Another way instead of pure console output is to use XML: `coverage xml` or an even nicer HTML version: `coverage html`
+
+Delete the reports with `coverage erase` if needed
+
+### Setting pass criterion for coverage
+
+If a certain minimal coverage shall be ensured, adjust the report generation like this (example with `98%`):
+
+```shell
+coverage report -m --fail-under=98
+```
+
+This can also fail the CI pipeline due tu its exit code:
+
+```shell
+ test/test_shapes.py         50      2    96%   84-86
+------------------------------------------------------
+TOTAL                      191      6    97%
+Coverage failure: total of 97 is less than fail-under=98
+Error: Process completed with exit code 2.
+```
 
 ## GitHub actions
 
@@ -382,50 +440,37 @@ jobs:
 ![Testing status](https://github.com/krystofh/pytest-demo/actions/workflows/tests.yml/badge.svg)
 ```
 
-## Test coverage
+### Running matrix-tests
 
-Knowing which parts of code are covered by tests and which are left behind can be valuable. To run such analysis, it is recommended to use `coverage.py` instead of `pytest-cov`. 
+During development, it might be useful to test on multiple operating systems or using various Python versions. This can be done by setting a testing strategy in the Github workflow `tests.yml` file:
 
-The command can be run like below or with some additional pytest arguments.
-
-```bash
-coverage run -m pytest
+```yml
+jobs:
+  test: 
+    runs-on: ${{ matrix.os }}
+    strategy: 
+      matrix: 
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.10.x, 3.11.x]
 ```
 
-### Generating a coverage report
+The variable `${{ matrix.os }}` is used instead of a specific os version. The versions to be tested are then defined in the matrix. The Python versions can be used defining the latests patch with an `x` like `3.10.x` for example.
 
-After the tests finish, a report can be generated with:
+Due to the differences in the shell, one has to adjust some commands like the activation of virtual environment. The command below checks the OS it is running on with `runner.os` and then executes the `.bat` script on Windows instead of running the `source` command. 
 
-```bash
-coverage report -m
+```yaml
+${{ runner.os == 'Windows' && '.venv\\Scripts\\activate.bat' || 'source .venv/bin/activate' }}
 ```
 
-This gives an overview of the missing lines and percentage of statements covered:
+### Uploading artifacts
 
-```bash
-Name                     Stmts   Miss  Cover   Missing
-------------------------------------------------------
-source/__init__.py           0      0   100%
-source/functions.py         19      0   100%
-source/service.py            8      1    88%   19
-source/shapes.py            32      3    91%   19, 22, 25
-test/__init__.py             0      0   100%
-test/conftest.py             9      0   100%
-test/test_fixtures.py       15      0   100%
-test/test_functions.py      26      0   100%
-test/test_mocking.py        32      0   100%
-test/test_shapes.py         50      2    96%   84-86
-------------------------------------------------------
-TOTAL                      191      6    97%
-```
+Artifacts such as generated coverage reports, build files or any other relevant files can be uploaded to the server as an `artefact`. These are found under `actions/summary`:
 
-Another way instead of pure console output is to use XML: `coverage xml` or an even nicer HTML version: `coverage html`
+![Artifacts](doc/artifacts.png)
 
-Delete the reports with `coverage erase` if needed
+#### Example: uploading coverage report
 
-### Uploading the coverage report
-
-The generated report can be uploaded to the server as an `artefact`. Just add following lines as a next step in the `test` job.
+For uploading the coverage report, just add following lines as a next step in the `test` job.
 
 ```yaml
       - name: Upload Coverage Report
@@ -438,22 +483,14 @@ The generated report can be uploaded to the server as an `artefact`. Just add fo
             coverage.xml
 ```
 
-### Setting pass criterion for coverage
+When doing matrix testing, the artifacts have to be named differently in order to avoid naming conflicts. This can be done with the variables:
 
-If a certain minimal coverage shall be ensured, adjust the report generation like this (example with `98%`):
-
-```shell
-coverage report -m --fail-under=98
-```
-
-This can also fail the CI pipeline due tu its exit code:
-
-```shell
- test/test_shapes.py         50      2    96%   84-86
-------------------------------------------------------
-TOTAL                      191      6    97%
-Coverage failure: total of 97 is less than fail-under=98
-Error: Process completed with exit code 2.
+```yaml
+with:
+    name: coverage-reports-${{ matrix.os }}-${{ matrix.python-version }}
+    path: |
+    htmlcov
+    coverage.xml
 ```
 
 ## Links
